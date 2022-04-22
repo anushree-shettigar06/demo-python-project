@@ -3,7 +3,7 @@ def main_menu():
     print("Main Menu:")
     print("1. View all Enteries")
     print("2. Add an Entry")
-    print("3. Edit an Entry")
+    print("3. Update an Entry")
     print("4. Delete an Entry")
     print("5. Exit")
     choice = int(input("Please type the number of your choice as mentioned above: "))

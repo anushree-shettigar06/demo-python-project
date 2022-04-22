@@ -36,14 +36,17 @@ def validate_user():
         print("Please enter valid UserId")
 validate_user()
 
-def delete_entry():
+def edit_entry():
     database_1.view_all()
-    newUser = input("Please enter the UserId: ")
+    newUser = input("Please enter the UserIdof the entry you want to edit: ")
+    newWeb = input("Please enter the Website: ")
+    newUser1 = input("Please enter the UserId: ")
+    newPass = input("Please enter the Password: ")
     try:
-        print(cursor.execute("""DELETE FROM public.passmanage WHERE "UserID" = %s""", (newUser,)))
+        cursor.execute("""UPDATE public.passmanage SET "Website"=%s, "UserID"=%s, "Password"=%s WHERE "UserID" = %s""", (newWeb, newUser1, newPass, newUser,))
         ps_connection.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
-        # print("Error occured while deleting the data!")
+        # print("Error occured while updating the data!")
 
-delete_entry()
+edit_entry()

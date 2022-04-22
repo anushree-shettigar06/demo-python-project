@@ -57,6 +57,7 @@ def view_all():
             print ("{:<20} {:<25} {:<20}".format( row[0], row[1], row[2]))
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error occured while fetching the data")
+
 def add_entry():
     newWeb = input("Please enter the Website: ")
     newUser = input("Please enter the UserId: ")
@@ -71,8 +72,20 @@ def add_entry():
     except (Exception, psycopg2.DatabaseError) as error:
         # print(error)
         print("Error occured while inserting the data!")
+
 def edit_entry():
-    pass
+    view_all()
+    newUser = input("Please enter the UserIdof the entry you want to edit: ")
+    newWeb = input("Please enter the Website: ")
+    newUser1 = input("Please enter the UserId: ")
+    newPass = input("Please enter the Password: ")
+    try:
+        cursor.execute("""UPDATE public.passmanage SET "Website"=%s, "UserID"=%s, "Password"=%s WHERE "UserID" = %s""", (newWeb, newUser1, newPass, newUser,))
+        ps_connection.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        # print(error)
+        print("Error occured while updating the data!")
+
 def delete_entry():
     view_all()
     newUser = input("Please enter the UserId: ")
@@ -83,6 +96,7 @@ def delete_entry():
     except (Exception, psycopg2.DatabaseError) as error:
         # print(error)
         print("Error occured while deleting the data!")
+
 def close_db():
     if ps_connection:
         cursor.close()
