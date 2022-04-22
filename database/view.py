@@ -1,4 +1,4 @@
-from database_1 import view_all, edit_entry, delete_entry
+import database_1 
 def main_menu():
     print("Main Menu:")
     print("1. View all Enteries")
@@ -8,13 +8,17 @@ def main_menu():
     print("5. Exit")
     choice = int(input("Please type the number of your choice as mentioned above: "))
     if choice==1:
-        view_all()
+        database_1.view_all()
+        main_menu()
     elif choice==2:
-        add_entry()
+        database_1.add_entry()
+        main_menu()
     elif choice==3:
-        edit_entry()
+        database_1.edit_entry()
+        main_menu()
     elif choice==4:
-        delete_entry()
+        database_1.delete_entry()
+        main_menu()
     elif choice==5:
         return
     else:

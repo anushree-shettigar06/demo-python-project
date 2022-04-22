@@ -1,6 +1,5 @@
 import psycopg2
 from configdetails import Details
-from view import main_menu
 import pandas as pd
 
 details= Details()
@@ -34,29 +33,8 @@ def validate_user():
         flag = 1
     except (Exception, psycopg2.DatabaseError) as error:
         print("Please enter valid UserId")
+validate_user()
 
-    if(flag==1 and user_login != None and user_login[0]==passWd):
-        print("Welcome")
-        main_menu()
-    elif user_login==None:
-        print("Wrong UserId, Try again!")
-        validate_user()
-    elif flag==1:
-        print("Wrong Password, Try again!")
-        validate_user()
-    else:
-        validate_user()
-
-def view_all():
-    postgreSQL_select_Query = "select * from passmanage"
-    try:
-        cursor.execute(postgreSQL_select_Query)
-        allEnteries = cursor.fetchall()
-        print ("{:<20} {:<25} {:<25}".format('Website','UserID','Password'))
-        for row in allEnteries:
-            print ("{:<20} {:<25} {:<20}".format( row[0], row[1], row[2]))
-    except (Exception, psycopg2.DatabaseError) as error:
-        print("Error occured while fetching the data")
 def add_entry():
     newWeb = input("Please enter the Website: ")
     newUser = input("Please enter the UserId: ")
@@ -69,7 +47,4 @@ def add_entry():
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
         # print("Error occured while inserting the data!")
-def edit_entry():
-    pass
-def delete_entry():
-    pass
+add_entry()
