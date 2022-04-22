@@ -1,6 +1,7 @@
 import psycopg2
 from configdetails import Details
 import pandas as pd
+import database_1 
 
 details= Details()
 database_name=details.get_database_name()
@@ -35,16 +36,14 @@ def validate_user():
         print("Please enter valid UserId")
 validate_user()
 
-def add_entry():
-    newWeb = input("Please enter the Website: ")
+def delete_entry():
+    database_1.view_all()
     newUser = input("Please enter the UserId: ")
-    newPass = input("Please enter the Password: ")
-    postgreSQL_select_Query = """INSERT INTO passmanage("Website", "UserID", "Password") VALUES (%s, %s, %s);"""
-    insert_values = (newWeb,newUser,newPass)
     try:
-        cursor.execute(postgreSQL_select_Query,insert_values)
-        print("New Entry inserted!!")
+        print(cursor.execute("""DELETE FROM public.passmanage WHERE "UserID" = %s""", (newUser,)))
+        ps_connection.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
-        # print("Error occured while inserting the data!")
-add_entry()
+        # print("Error occured while deleting the data!")
+
+delete_entry()

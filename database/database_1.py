@@ -69,12 +69,20 @@ def add_entry():
             ps_connection.commit()
         print("New Entry inserted!!")
     except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-        # print("Error occured while inserting the data!")
+        # print(error)
+        print("Error occured while inserting the data!")
 def edit_entry():
     pass
 def delete_entry():
-    pass
+    view_all()
+    newUser = input("Please enter the UserId: ")
+    try:
+        cursor.execute("""DELETE FROM public.passmanage WHERE "UserID" = %s""", (newUser,))
+        ps_connection.commit()
+        # print("Entry Deleted!!")
+    except (Exception, psycopg2.DatabaseError) as error:
+        # print(error)
+        print("Error occured while deleting the data!")
 def close_db():
     if ps_connection:
         cursor.close()
