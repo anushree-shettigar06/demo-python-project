@@ -61,10 +61,12 @@ def add_entry():
     newWeb = input("Please enter the Website: ")
     newUser = input("Please enter the UserId: ")
     newPass = input("Please enter the Password: ")
-    postgreSQL_select_Query = """INSERT INTO passmanage("Website", "UserID", "Password") VALUES (%s, %s, %s);"""
-    insert_values = (newWeb,newUser,newPass)
+    postgreSQL_select_Query = """INSERT INTO public.passmanage("Website", "UserID", "Password") VALUES (%s, %s, %s);"""
+    insert_values = [(newWeb,newUser,newPass)]
     try:
-        cursor.execute(postgreSQL_select_Query,insert_values)
+        for record in insert_values:
+            cursor.execute(postgreSQL_select_Query, record)
+            ps_connection.commit()
         print("New Entry inserted!!")
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -73,3 +75,8 @@ def edit_entry():
     pass
 def delete_entry():
     pass
+def close_db():
+    if ps_connection:
+        cursor.close()
+        ps_connection.close()
+        print("PostgreSQL connection is closed")

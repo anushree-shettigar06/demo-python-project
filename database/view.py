@@ -20,7 +20,7 @@ def main_menu():
         database_1.delete_entry()
         main_menu()
     elif choice==5:
-        return
+        database_1.close_db()
     else:
         print("Please enter a valid choice!!")
         main_menu()
