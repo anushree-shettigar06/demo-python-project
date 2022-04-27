@@ -54,7 +54,7 @@ def view_all():
         allEnteries = cursor.fetchall()
         print ("{:<20} {:<25} {:<25}".format('Website','UserID','Password'))
         for row in allEnteries:
-            print ("{:<20} {:<25} {:<20}".format( row[0], row[1], row[2]))
+            print ("{:<20} {:<25} {:<25}".format( row[0], row[1], row[2]))
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error occured while fetching the data")
 
@@ -62,7 +62,7 @@ def add_entry():
     newWeb = input("Please enter the Website: ")
     newUser = input("Please enter the UserId: ")
     newPass = input("Please enter the Password: ")
-    postgreSQL_select_Query = """INSERT INTO public.passmanage("Website", "UserID", "Password") VALUES (%s, %s, %s);"""
+    postgreSQL_select_Query = """INSERT INTO passmanage(Website, UserID, Password) VALUES (%s, %s, %s);"""
     insert_values = [(newWeb,newUser,newPass)]
     try:
         for record in insert_values:
@@ -71,7 +71,7 @@ def add_entry():
         print("New Entry inserted!!")
     except (Exception, psycopg2.DatabaseError) as error:
         # print(error)
-        print("Error occured while inserting the data!")
+        print("Error occured while inserting the data!",error)
 
 def edit_entry():
     view_all()
@@ -80,8 +80,9 @@ def edit_entry():
     newUser1 = input("Please enter the UserId: ")
     newPass = input("Please enter the Password: ")
     try:
-        cursor.execute("""UPDATE public.passmanage SET "Website"=%s, "UserID"=%s, "Password"=%s WHERE "UserID" = %s""", (newWeb, newUser1, newPass, newUser,))
+        cursor.execute("""UPDATE public.passmanage SET Website=%s, UserID=%s, Password=%s WHERE UserID = %s""", (newWeb, newUser1, newPass, newUser,))
         ps_connection.commit()
+        print("Updated Successfully!!")
     except (Exception, psycopg2.DatabaseError) as error:
         # print(error)
         print("Error occured while updating the data!")
@@ -90,9 +91,9 @@ def delete_entry():
     view_all()
     newUser = input("Please enter the UserId: ")
     try:
-        cursor.execute("""DELETE FROM public.passmanage WHERE "UserID" = %s""", (newUser,))
+        cursor.execute("""DELETE FROM public.passmanage WHERE UserID = %s""", (newUser,))
         ps_connection.commit()
-        # print("Entry Deleted!!")
+        print("Entry Deleted!!")
     except (Exception, psycopg2.DatabaseError) as error:
         # print(error)
         print("Error occured while deleting the data!")
