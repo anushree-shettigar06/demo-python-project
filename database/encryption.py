@@ -9,10 +9,12 @@ f = Fernet(key)
 def encrypt_pass(data):
     return f.encrypt(data.encode())
 
+# encypted = encrypt_pass('Anuj').decode()
 # encrypted = encrypt_pass("Anuj")
 # print(encrypted)
 
 def decrypt_pass(data):
-    return (f.decrypt(data)).decode()
+    return (f.decrypt(data))
 
+# print(decrypt_pass(encypted.encode()).decode())
 # print(decrypt_pass(encrypted))

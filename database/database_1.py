@@ -2,6 +2,7 @@ import psycopg2
 from configdetails import Details
 from view import main_menu
 import pandas as pd
+from encryption import encrypt_pass, decrypt_pass
 
 details= Details()
 database_name=details.get_database_name()
@@ -54,7 +55,8 @@ def view_all():
         allEnteries = cursor.fetchall()
         print ("{:<20} {:<25} {:<25}".format('Website','UserID','Password'))
         for row in allEnteries:
-            print ("{:<20} {:<25} {:<25}".format( row[0], row[1], row[2]))
+            password = decrypt_pass(row[2].encode())
+            print ("{:<20} {:<25} {:<25}".format( row[0], row[1], password.decode()))
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error occured while fetching the data")
 
@@ -63,7 +65,8 @@ def add_entry():
     newUser = input("Please enter the UserId: ")
     newPass = input("Please enter the Password: ")
     postgreSQL_select_Query = """INSERT INTO passmanage(Website, UserID, Password) VALUES (%s, %s, %s);"""
-    insert_values = [(newWeb,newUser,newPass)]
+    newPassEnc = encrypt_pass(newPass).decode()
+    insert_values = [(newWeb,newUser,newPassEnc)]
     try:
         for record in insert_values:
             cursor.execute(postgreSQL_select_Query, record)
@@ -79,8 +82,9 @@ def edit_entry():
     newWeb = input("Please enter the Website: ")
     newUser1 = input("Please enter the UserId: ")
     newPass = input("Please enter the Password: ")
+    newPassEnc = encrypt_pass(newPass).decode()
     try:
-        cursor.execute("""UPDATE public.passmanage SET Website=%s, UserID=%s, Password=%s WHERE UserID = %s""", (newWeb, newUser1, newPass, newUser,))
+        cursor.execute("""UPDATE public.passmanage SET Website=%s, UserID=%s, Password=%s WHERE UserID = %s""", (newWeb, newUser1, newPassEnc, newUser,))
         ps_connection.commit()
         print("Updated Successfully!!")
     except (Exception, psycopg2.DatabaseError) as error:

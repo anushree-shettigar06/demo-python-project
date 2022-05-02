@@ -1,5 +1,6 @@
 import psycopg2
 from configdetails import Details
+from encryption import encrypt_pass
 
 details= Details()
 database_name=details.get_database_name()
@@ -32,11 +33,13 @@ try:
     create_script = ''' CREATE TABLE IF NOT EXISTS passmanage(
             Website varchar(40) PRIMARY KEY,
             UserID varchar(40) NOT NULL,
-            Password varchar(40) NOT NULL)'''
+            Password varchar(500) NOT NULL)'''
 
     cursor.execute(create_script)
+    pass1 = encrypt_pass('admin1').decode()
+    pass2 = encrypt_pass('master1').decode()
     insert_data = '''INSERT INTO passmanage(Website, UserID, Password) VALUES( %s, %s, %s)'''
-    insert_values = [('gmail.com','admin', 'admin1'), ('google.com','master', 'master1')]
+    insert_values = [('gmail.com','admin', pass1), ('google.com','master', pass2)]
     for record in insert_values:
         cursor.execute(insert_data, record)
     print("created table passmanage successfully....")
