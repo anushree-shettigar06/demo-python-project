@@ -1,6 +1,7 @@
 import psycopg2
 from configdetails import Details
 from encryption import encrypt_pass
+import hashlib
 
 details= Details()
 database_name=details.get_database_name()
@@ -24,7 +25,7 @@ try:
 
     cursor.execute(create_script)
     insert_data = '''INSERT INTO users(userid, password) VALUES( %s, %s)'''
-    insert_values = [('admin', 'admin1'), ('master', 'master1')]
+    insert_values = [('admin', hashlib.sha1("admin1".encode()).hexdigest()), ('master', hashlib.sha1("master1".encode()).hexdigest())]
     for record in insert_values:
         cursor.execute(insert_data, record)
     print("created table users successfully....")

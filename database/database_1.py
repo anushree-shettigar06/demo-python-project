@@ -3,6 +3,7 @@ from configdetails import Details
 from view import main_menu
 import pandas as pd
 from encryption import encrypt_pass, decrypt_pass
+import hashlib
 
 details= Details()
 database_name=details.get_database_name()
@@ -26,7 +27,7 @@ flag = 0
 def validate_user():
     userId = input("Please enter userId: ")
     passWd = input("Please enter password: ")
-
+    passWd=hashlib.sha1(passWd.encode()).hexdigest()
     postgreSQL_select_Query = "select password from users where userid ='"+userId+"'"
     try:
         cursor.execute(postgreSQL_select_Query)
