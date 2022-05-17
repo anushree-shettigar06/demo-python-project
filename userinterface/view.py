@@ -1,4 +1,4 @@
-import database_1 
+from db import database_1 
 def main_menu():
     print("Main Menu:")
     print("1. View all Enteries")

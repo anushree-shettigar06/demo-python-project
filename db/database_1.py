@@ -1,8 +1,8 @@
 import psycopg2
-from configdetails import Details
-from view import main_menu
+from db.configdetails import Details
+from userinterface.view import main_menu
 import pandas as pd
-from encryption import encrypt_pass, decrypt_pass
+from userinterface.encryption import encrypt_pass, decrypt_pass
 import hashlib
 
 details= Details()

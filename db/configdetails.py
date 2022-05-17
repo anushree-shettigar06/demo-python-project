@@ -1,7 +1,7 @@
 import configparser
 
 config=configparser.RawConfigParser()
-config.read('database\config.properties')
+config.read('C://Users//Hari Priya//Desktop\pythondemo//demo-python-project//db//config.properties')
 
 class Details:
     def __init__(self):

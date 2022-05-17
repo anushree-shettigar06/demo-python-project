@@ -1,6 +1,6 @@
 import psycopg2
-from configdetails import Details
-from encryption import encrypt_pass
+from db.configdetails import Details
+from userinterface.encryption import encrypt_pass
 import hashlib
 
 details= Details()
