@@ -1,5 +1,5 @@
 import psycopg2
-from db.configdetails import Details
+from db.config_details import Details
 
 details= Details()
 database_name=details.get_database_name()

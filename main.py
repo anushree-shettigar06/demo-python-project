@@ -1,3 +1,4 @@
-from db.database_1 import validate_user
+from db.database import validate_user
+
 print("***********************Welcome to Password Manager***********************")
 validate_user()

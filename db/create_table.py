@@ -1,5 +1,5 @@
 import psycopg2
-from db.configdetails import Details
+from db.config_details import Details
 from userinterface.encryption import encrypt_pass
 import hashlib
 

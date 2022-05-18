@@ -1,16 +1,17 @@
-import psycopg2
-from db.configdetails import Details
-from userinterface.view import main_menu
-import pandas as pd
-from userinterface.encryption import encrypt_pass, decrypt_pass
 import hashlib
 
-details= Details()
-database_name=details.get_database_name()
-database_user=details.get_database_user()
-database_pwd=details.get_database_password()
-database_host=details.get_database_host()
-database_port=details.get_database_port()
+import psycopg2
+
+from db.config_details import Details
+from userinterface.encryption import encrypt_pass, decrypt_pass
+from userinterface.view import main_menu
+
+details = Details()
+database_name = details.get_database_name()
+database_user = details.get_database_user()
+database_pwd = details.get_database_password()
+database_host = details.get_database_host()
+database_port = details.get_database_port()
 
 try:
     ps_connection = psycopg2.connect(user=database_user,
@@ -24,11 +25,13 @@ except (Exception, psycopg2.DatabaseError) as error:
     print("Error connecting to the Database")
 
 flag = 0
+
+
 def validate_user():
-    userId = input("Please enter userId: ")
-    passWd = input("Please enter password: ")
-    passWd=hashlib.sha1(passWd.encode()).hexdigest()
-    postgreSQL_select_Query = "select password from users where userid ='"+userId+"'"
+    user_id = input("Please enter userId: ")
+    pass_wd = input("Please enter password: ")
+    pass_wd = hashlib.sha1(pass_wd.encode()).hexdigest()
+    postgreSQL_select_Query = "select password from users where userid ='" + user_id + "'"
     try:
         cursor.execute(postgreSQL_select_Query)
         user_login = cursor.fetchone()
@@ -37,37 +40,39 @@ def validate_user():
     except (Exception, psycopg2.DatabaseError) as error:
         print("Please enter valid UserId")
 
-    if(flag==1 and user_login != None and user_login[0]==passWd):
+    if (flag == 1 and user_login != None and user_login[0] == pass_wd):
         print("Welcome")
         main_menu()
-    elif user_login==None:
+    elif user_login == None:
         print("Wrong UserId, Try again!")
         validate_user()
-    elif flag==1:
+    elif flag == 1:
         print("Wrong Password, Try again!")
         validate_user()
     else:
         validate_user()
 
+
 def view_all():
     postgreSQL_select_Query = "select * from passmanage"
     try:
         cursor.execute(postgreSQL_select_Query)
-        allEnteries = cursor.fetchall()
-        print ("{:<20} {:<25} {:<25}".format('Website','UserID','Password'))
-        for row in allEnteries:
+        all_enteries = cursor.fetchall()
+        print("{:<20} {:<25} {:<25}".format('Website', 'UserID', 'Password'))
+        for row in all_enteries:
             password = decrypt_pass(row[2].encode())
-            print ("{:<20} {:<25} {:<25}".format( row[0], row[1], password.decode()))
+            print("{:<20} {:<25} {:<25}".format(row[0], row[1], password.decode()))
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error occured while fetching the data")
 
+
 def add_entry():
-    newWeb = input("Please enter the Website: ")
-    newUser = input("Please enter the UserId: ")
-    newPass = input("Please enter the Password: ")
+    new_web = input("Please enter the Website: ")
+    new_user = input("Please enter the UserId: ")
+    new_pass = input("Please enter the Password: ")
     postgreSQL_select_Query = """INSERT INTO passmanage(Website, UserID, Password) VALUES (%s, %s, %s);"""
-    newPassEnc = encrypt_pass(newPass).decode()
-    insert_values = [(newWeb,newUser,newPassEnc)]
+    new_pass_enc = encrypt_pass(new_pass).decode()
+    insert_values = [(new_web, new_user, new_pass_enc)]
     try:
         for record in insert_values:
             cursor.execute(postgreSQL_select_Query, record)
@@ -75,33 +80,37 @@ def add_entry():
         print("New Entry inserted!!")
     except (Exception, psycopg2.DatabaseError) as error:
         # print(error)
-        print("Error occured while inserting the data!",error)
+        print("Error occured while inserting the data!", error)
+
 
 def edit_entry():
     view_all()
-    newUser = input("Please enter the UserIdof the entry you want to edit: ")
-    newWeb = input("Please enter the Website: ")
-    newUser1 = input("Please enter the UserId: ")
-    newPass = input("Please enter the Password: ")
-    newPassEnc = encrypt_pass(newPass).decode()
+    new_user = input("Please enter the UserId of the entry you want to edit: ")
+    new_web = input("Please enter the Website: ")
+    new_user1 = input("Please enter the UserId: ")
+    new_pass = input("Please enter the Password: ")
+    new_pass_enc = encrypt_pass(new_pass).decode()
     try:
-        cursor.execute("""UPDATE public.passmanage SET Website=%s, UserID=%s, Password=%s WHERE UserID = %s""", (newWeb, newUser1, newPassEnc, newUser,))
+        cursor.execute("""UPDATE public.passmanage SET Website=%s, UserID=%s, Password=%s WHERE UserID = %s""",
+                       (new_web, new_user1, new_pass_enc, new_user,))
         ps_connection.commit()
         print("Updated Successfully!!")
     except (Exception, psycopg2.DatabaseError) as error:
         # print(error)
         print("Error occured while updating the data!")
 
+
 def delete_entry():
     view_all()
-    newUser = input("Please enter the UserId: ")
+    new_user = input("Please enter the UserId: ")
     try:
-        cursor.execute("""DELETE FROM public.passmanage WHERE UserID = %s""", (newUser,))
+        cursor.execute("""DELETE FROM public.passmanage WHERE UserID = %s""", (new_user,))
         ps_connection.commit()
         print("Entry Deleted!!")
     except (Exception, psycopg2.DatabaseError) as error:
         # print(error)
         print("Error occured while deleting the data!")
+
 
 def close_db():
     if ps_connection:
