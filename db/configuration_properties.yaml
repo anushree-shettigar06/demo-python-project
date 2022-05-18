@@ -1,0 +1,7 @@
+---
+DB_DETAILS:
+  DB_NAME: testdatabase
+  USER_NAME: postgres
+  PASSWORD: 1234567
+  HOST: 127.0.0.1
+  PORT: 5432
