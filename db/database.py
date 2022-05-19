@@ -1,7 +1,5 @@
 import hashlib
-
 import psycopg2
-
 from db.config_details import Details
 from userinterface.encryption import encrypt_pass, decrypt_pass
 from userinterface.view import main_menu
@@ -31,19 +29,19 @@ def validate_user():
     user_id = input("Please enter userId: ")
     pass_wd = input("Please enter password: ")
     pass_wd = hashlib.sha1(pass_wd.encode()).hexdigest()
-    postgreSQL_select_Query = "select password from users where userid ='" + user_id + "'"
+    postgresql_select_query = "select password from users where userid ='" + user_id + "'"
     try:
-        cursor.execute(postgreSQL_select_Query)
+        cursor.execute(postgresql_select_query)
         user_login = cursor.fetchone()
         global flag
         flag = 1
-    except (Exception, psycopg2.DatabaseError) as error:
+    except (Exception, psycopg2.DatabaseError) as error_1:
         print("Please enter valid UserId")
 
-    if (flag == 1 and user_login != None and user_login[0] == pass_wd):
+    if flag == 1 and user_login is not None and user_login[0] == pass_wd:
         print("Welcome")
         main_menu()
-    elif user_login == None:
+    elif user_login is None:
         print("Wrong UserId, Try again!")
         validate_user()
     elif flag == 1:
@@ -54,33 +52,33 @@ def validate_user():
 
 
 def view_all():
-    postgreSQL_select_Query = "select * from passmanage"
+    postgresql_select_query = "select * from passmanage"
     try:
-        cursor.execute(postgreSQL_select_Query)
-        all_enteries = cursor.fetchall()
+        cursor.execute(postgresql_select_query)
+        all_entries = cursor.fetchall()
         print("{:<20} {:<25} {:<25}".format('Website', 'UserID', 'Password'))
-        for row in all_enteries:
+        for row in all_entries:
             password = decrypt_pass(row[2].encode())
             print("{:<20} {:<25} {:<25}".format(row[0], row[1], password.decode()))
-    except (Exception, psycopg2.DatabaseError) as error:
-        print("Error occured while fetching the data")
+    except (Exception, psycopg2.DatabaseError) as error_2:
+        print("Error occurred while fetching the data")
 
 
 def add_entry():
     new_web = input("Please enter the Website: ")
     new_user = input("Please enter the UserId: ")
     new_pass = input("Please enter the Password: ")
-    postgreSQL_select_Query = """INSERT INTO passmanage(Website, UserID, Password) VALUES (%s, %s, %s);"""
+    postgresql_select_query = """INSERT INTO passmanage(Website, UserID, Password) VALUES (%s, %s, %s);"""
     new_pass_enc = encrypt_pass(new_pass).decode()
     insert_values = [(new_web, new_user, new_pass_enc)]
     try:
         for record in insert_values:
-            cursor.execute(postgreSQL_select_Query, record)
+            cursor.execute(postgresql_select_query, record)
             ps_connection.commit()
         print("New Entry inserted!!")
-    except (Exception, psycopg2.DatabaseError) as error:
+    except (Exception, psycopg2.DatabaseError) as error_3:
         # print(error)
-        print("Error occured while inserting the data!", error)
+        print("Error occurred while inserting the data!", error_3)
 
 
 def edit_entry():
@@ -95,9 +93,9 @@ def edit_entry():
                        (new_web, new_user1, new_pass_enc, new_user,))
         ps_connection.commit()
         print("Updated Successfully!!")
-    except (Exception, psycopg2.DatabaseError) as error:
-        # print(error)
-        print("Error occured while updating the data!")
+    except (Exception, psycopg2.DatabaseError) as error_1:
+        # print(error_1)
+        print("Error occurred while updating the data!")
 
 
 def delete_entry():
@@ -107,9 +105,9 @@ def delete_entry():
         cursor.execute("""DELETE FROM public.passmanage WHERE UserID = %s""", (new_user,))
         ps_connection.commit()
         print("Entry Deleted!!")
-    except (Exception, psycopg2.DatabaseError) as error:
+    except (Exception, psycopg2.DatabaseError) as error_2:
         # print(error)
-        print("Error occured while deleting the data!")
+        print("Error occurred while deleting the data!")
 
 
 def close_db():
