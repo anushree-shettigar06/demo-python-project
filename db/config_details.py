@@ -5,7 +5,7 @@ import yaml
 # # config.read('D:\projectsss\demo-python-project\db\configuration_properties.yaml')
 
 
-with open("C://Users//Hari Priya//Desktop//pythondemo//demo-python-project//db//configuration_properties.yaml", "r") as configfile:
+with open("db/configuration_properties.yaml", "r") as configfile:
     config = yaml.safe_load(configfile)
 
 

@@ -2,7 +2,7 @@ from cryptography.fernet import Fernet
 
 
 def load_key():
-    return open("C://Users//Hari Priya//Desktop//pythondemo//demo-python-project//key.key", "rb").read()
+    return open("D:\demo-python-project\key.key", "rb").read()
 
 
 key = load_key()
