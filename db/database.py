@@ -23,6 +23,16 @@ class Database:
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error connecting to the Database")
 
+    def fetch(self, query):
+        cursor = self.ps_connection.cursor()
+        postgresql_select_query = query
+        try:
+            cursor.execute(postgresql_select_query)
+            all_entries = cursor.fetchall()
+            return all_entries
+        except (Exception, psycopg2.DatabaseError) as error_2:
+            print("Error occurred while fetching the data")
+
     def validate_user(self):
         flag = 0
         valid_flag = 0
@@ -40,7 +50,7 @@ class Database:
 
             if flag == 1 and user_login is not None and user_login[0] == pass_wd:
                 print("Welcome")
-                main_menu(self.ps_connection)
+                main_menu(self)
                 valid_flag = 1
             elif user_login is None:
                 print("Wrong UserId, Try again!")

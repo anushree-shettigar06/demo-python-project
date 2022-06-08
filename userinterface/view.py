@@ -1,7 +1,7 @@
 from db.database_functins import view_all, add_entry, edit_entry, delete_entry
 
 
-def main_menu(ps_connection):
+def main_menu(database_obj):
     choice = 0
     while choice != 5:
         print("Main Menu:")
@@ -12,14 +12,14 @@ def main_menu(ps_connection):
         print("5. Exit")
         choice = int(input("Please type the number of your choice as mentioned above: "))
         if choice == 1:
-            view_all(ps_connection)
+            view_all(database_obj)
         elif choice == 2:
-            add_entry(ps_connection)
+            add_entry(database_obj)
         elif choice == 3:
-            edit_entry(ps_connection)
+            edit_entry(database_obj)
         elif choice == 4:
-            delete_entry(ps_connection)
+            delete_entry(database_obj)
         else:
             print("Please enter a valid choice!!")
-    ps_connection.close()
+    database_obj.ps_connection.close()
     print("PostgreSQL connection is closed")
