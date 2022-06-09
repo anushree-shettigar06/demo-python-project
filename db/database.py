@@ -1,51 +1,41 @@
-import hashlib
 import psycopg2
 from db.config_details import Details
-from userinterface.view import main_menu
-
-details = Details()
-database_name = details.get_database_name()
-database_user = details.get_database_user()
-database_pwd = details.get_database_password()
-database_host = details.get_database_host()
-database_port = details.get_database_port()
-
-try:
-    ps_connection = psycopg2.connect(user=database_user,
-                                     password=database_pwd,
-                                     host=database_host,
-                                     port=database_port,
-                                     database=database_name)
-    cursor = ps_connection.cursor()
-
-except (Exception, psycopg2.DatabaseError) as error:
-    print("Error connecting to the Database")
-
-flag = 0
 
 
-def validate_user():
-    user_id = input("Please enter userId: ")
-    pass_wd = input("Please enter password: ")
-    pass_wd = hashlib.sha1(pass_wd.encode()).hexdigest()
-    postgresql_select_query = "select password from users where userid ='" + user_id + "'"
-    try:
-        cursor.execute(postgresql_select_query)
-        user_login = cursor.fetchone()
-        global flag
-        flag = 1
-    except (Exception, psycopg2.DatabaseError) as error_1:
-        print("Please enter valid UserId")
+class Database:
+    def __init__(self):
+        details = Details()
+        self.database_name = details.database_name
+        self.database_user = details.database_user
+        self.database_pwd = details.database_pwd
+        self.database_host = details.database_host
+        self.database_port = details.database_port
+        try:
+            self.ps_connection = psycopg2.connect(user=self.database_user,
+                                                  password=self.database_pwd,
+                                                  host=self.database_host,
+                                                  port=self.database_port,
+                                                  database=self.database_name)
+            self.cursor = self.ps_connection.cursor()
 
-    if flag == 1 and user_login is not None and user_login[0] == pass_wd:
-        print("Welcome")
-        main_menu(ps_connection)
-    elif user_login is None:
-        print("Wrong UserId, Try again!")
-        validate_user()
-    elif flag == 1:
-        print("Wrong Password, Try again!")
-        validate_user()
-    else:
-        validate_user()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print("Error connecting to the Database")
+
+    def fetch(self, query):
+        cursor = self.ps_connection.cursor()
+        try:
+            cursor.execute(query)
+            all_entries = cursor.fetchall()
+            return all_entries
+        except (Exception, psycopg2.DatabaseError) as error_2:
+            print("Error occurred while fetching the data")
+
+    def run_query(self, query, record):
+        cursor = self.ps_connection.cursor()
+        try:
+            cursor.execute(query, record)
+            self.ps_connection.commit()
+        except (Exception, psycopg2.DatabaseError) as error_3:
+            print("Error occurred while inserting the data!", error_3)
+
 
