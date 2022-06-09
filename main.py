@@ -1,10 +1,12 @@
 from db.database import Database
+from db.database_functins import DatabaseFunctions
 
 
 def main():
     print("***********************Welcome to Password Manager***********************")
     database = Database()
-    database.validate_user()
+    db_func = DatabaseFunctions(database)
+    db_func.validate_user()
 
 
 if __name__ == "__main__":
