@@ -2,11 +2,11 @@ import psycopg2
 from db.config_details import Details
 
 details = Details()
-database_name = details.get_database_name()
-database_user = details.get_database_user()
-database_pwd = details.get_database_password()
-database_host = details.get_database_host()
-database_port = details.get_database_port()
+database_name = details.database_name
+database_user = details.database_user
+database_pwd = details.database_pwd
+database_host = details.database_host
+database_port = details.database_port
 
 try:
     ps_connection = psycopg2.connect(user=database_user,
